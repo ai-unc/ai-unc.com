@@ -92,11 +92,14 @@ export const actions: Actions = {
 
 		if (id == null || email == null || track == null) return fail(500, { error: "Missing fields" });
 
+		const primary_track_price_id = dev ? "price_1PpNVjHVPOTtkojgDS4uhZPu" : "price_1PpO6oHVPOTtkojgQKqDtK3n"; //spellchecker: disable-line
+		const foundational_track_price_id = dev ? "price_1PjSzIHVPOTtkojggOe291LX" : "price_1PpO74HVPOTtkojgrmYrAM3O"; //spellchecker: disable-line
+
 		const stripe = new Stripe(STRIPE_SECRET_KEY);
 		const session = await stripe.checkout.sessions.create({
 			line_items: [
 				{
-					price: track === "beginner" ? "price_1PjSzIHVPOTtkojggOe291LX" : "price_1PpNVjHVPOTtkojgDS4uhZPu", //spellchecker: disable-line
+					price: track === "beginner" ? foundational_track_price_id : primary_track_price_id,
 					quantity: 1,
 				},
 			],
