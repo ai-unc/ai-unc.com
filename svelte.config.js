@@ -15,7 +15,7 @@ const config = {
 		},
 		adapter: adapter({
 			images: {
-				sizes: [640, 828, 1200, 1920, 3840],
+				sizes: [640, 828, 1200, 1920],
 				formats: ["image/avif", "image/webp"],
 				minimumCacheTTL: 300,
 				domains: ["ai-unc.com"],
