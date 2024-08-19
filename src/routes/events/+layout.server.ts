@@ -5,6 +5,7 @@ import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 
 import { error as kitError } from "@sveltejs/kit";
 
+export const prerender = false;
 export const load: LayoutServerLoad = async ({ fetch }) => {
 	const CURRENT_DATE_ISO = new Date().toISOString();
 	async function getEvents(): Promise<Array<CalendarEvent>> {

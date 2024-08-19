@@ -163,7 +163,7 @@
 		</div>
 		<div class="event-offering" style="background-color:#359A93;">
 			<div class="backdrop-wrapper">
-				<img class="backdrop" src="/major-events.jpg" alt="Some AI@UNC members working on a project" />
+				<img class="backdrop" src="/major-events.jpg" srcset={optimize("/major-events.jpg")} alt="Some AI@UNC members working on a project" />
 			</div>
 			<h3>Major Events</h3>
 			<p>
