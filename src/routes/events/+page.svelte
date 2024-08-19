@@ -127,7 +127,6 @@
 	} = createCollapsible({
 		onOpenChange: ({ next }) => {
 			if (is_mql_matching) {
-				console.log("Hi");
 				return true;
 			} else return next;
 		},

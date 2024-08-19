@@ -12,7 +12,6 @@
 	$effect(() => {
 		if (events.length > 0 && events.length < max_events_showing) max_events_showing = events.length;
 		if (max_events_showing < MIN_EVENTS_SHOWING && MIN_EVENTS_SHOWING <= events.length) max_events_showing = MIN_EVENTS_SHOWING;
-		console.log("Effect");
 	});
 </script>
 
