@@ -1,0 +1,15 @@
+{
+	"useTabs": true,
+	"printWidth": 180,
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss", "prettier-plugin-embed", "prettier-plugin-sql"],
+	"overrides": [
+		{ "files": "*.svelte", "options": { "parser": "svelte" } },
+		{
+			"files": "*.sql",
+			"options": {
+				"keywordCase": "upper",
+				"language": "postgresql"
+			}
+		}
+	]
+}
