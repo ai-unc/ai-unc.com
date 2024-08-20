@@ -80,6 +80,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>AI@UNC</title>
+</svelte:head>
+
 <svelte:window onscroll={handleScroll} />
 
 <section class="hero">
