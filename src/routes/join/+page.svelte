@@ -42,6 +42,7 @@
 		<div>
 			<div class="title">Primary Track</div>
 			<div class="price text-green-400">$40 <span class="cycle">/ year</span><a href="#sign-up" onclick={() => ($form.is_beginner_track = false)}>Sign Up</a></div>
+			<div class="disclaimer">We are <strong>NON-PROFIT!</strong> All dues go to our events and projects!</div>
 		</div>
 		<ul class="opportunities">
 			<li><Check />Able to attend our Private Events (such as our Book Club)</li>
@@ -74,6 +75,7 @@
 			<div class="price text-blue-500">
 				$10 <span class="cycle">/ year</span><a href="#sign-up" onclick={updateBeginnerToTrue}>Sign Up</a>
 			</div>
+			<div class="disclaimer">We are <strong>NON-PROFIT!</strong> All dues go to our events and projects!</div>
 		</div>
 		<ul class="opportunities">
 			<li><Check />Able to attend our Private Events (such as our Book Club)</li>
@@ -228,7 +230,7 @@
 
 			@apply font-semibold;
 
-			@apply mb-4 mt-3 xl:mt-6;
+			@apply mb-3 mt-3 xl:mt-6;
 
 			text-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
 
@@ -255,6 +257,10 @@
 					filter: brightness(1.2);
 				}
 			}
+		}
+		.disclaimer {
+			@apply text-xs md:text-sm lg:text-[16px] xl:text-xl 2xl:text-2xl;
+			@apply mb-2 md:mb-3 lg:mb-4;
 		}
 		.opportunities,
 		.requirements {
