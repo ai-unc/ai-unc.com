@@ -45,7 +45,7 @@
 		},
 	];
 	function countEvents(events: Array<CalendarEvent>, type: EventTypeAndOther): number {
-		if (type === null) return events.filter((e) => e.data === undefined || e.data.type === undefined).length;
+		if (type === null) return events.filter((e) => e.data == undefined || e.data.type === null).length;
 		return events.filter((e) => e.data?.type === type).length;
 	}
 	let selected_event_types: Array<EventTypeAndOther> = $state([]);
