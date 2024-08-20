@@ -41,7 +41,11 @@
 	<div id="primary-track" class="track-wrapper">
 		<div>
 			<div class="title">Primary Track</div>
-			<div class="price text-green-400">$40 <span class="cycle">/ year</span><a href="#sign-up" onclick={() => ($form.is_beginner_track = false)}>Sign Up</a></div>
+			<div class="price text-green-400">
+				<span class="text-[0.8em] text-haze-offwhite">Dues:</span> $40 <span class="cycle">/ year</span><a href="#sign-up" onclick={() => ($form.is_beginner_track = false)}
+					>Sign Up <span style="font-size:0.7em">(pay dues later)</span></a
+				>
+			</div>
 			<div class="disclaimer">We are <strong>NON-PROFIT!</strong> All dues go to our events and projects!</div>
 		</div>
 		<ul class="opportunities">
@@ -73,7 +77,9 @@
 		<div>
 			<div class="title">Foundational Track</div>
 			<div class="price text-blue-500">
-				$10 <span class="cycle">/ year</span><a href="#sign-up" onclick={updateBeginnerToTrue}>Sign Up</a>
+				<span class="text-[0.8em] text-haze-offwhite">Dues:</span> $10 <span class="cycle">/ year</span><a href="#sign-up" onclick={updateBeginnerToTrue}
+					>Sign Up <span style="font-size:0.7em">(pay dues later)</span></a
+				>
 			</div>
 			<div class="disclaimer">We are <strong>NON-PROFIT!</strong> All dues go to our events and projects!</div>
 		</div>
@@ -107,6 +113,7 @@
 	<div class="sign-up">
 		<div id="sign-up" class="absolute -top-20"></div>
 		<div class="form-wrapper">
+			<h3>Join Now. <span class="text-green-500">Pay Later</span></h3>
 			<form method="POST" action="?/join" use:enhance>
 				<div class="track-select">
 					<div class="options">
@@ -328,6 +335,11 @@
 	}
 
 	.form-wrapper {
+		h3 {
+			@apply mb-4 text-center font-bold xl:mb-6;
+
+			@apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl;
+		}
 		form {
 			width: fit-content;
 			@apply mx-auto;

@@ -337,7 +337,7 @@
 
 		@apply mb-8 xl:mb-0 xl:ml-8 2xl:ml-14;
 
-		@apply bg-gradient-to-br from-gray-950/20 to-gray-950 to-50% xl:bg-base/20;
+		@apply bg-gradient-to-br from-gray-900 to-gray-950 xl:bg-base/20;
 		@apply rounded-md p-4 ring-haze-offwhite/80 xl:p-8 xl:ring-[1px];
 
 		height: fit-content;
