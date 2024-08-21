@@ -8,10 +8,7 @@ import { schema } from "./formSchema";
 
 import { createServerClient } from "@supabase/ssr";
 import { PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, NODEMAILER_APP_PASSWORD } from "$env/static/private";
-
-import Stripe from "stripe";
-import { dev } from "$app/environment";
+import { SUPABASE_SERVICE_ROLE_KEY, NODEMAILER_APP_PASSWORD } from "$env/static/private";
 
 import nodemailer from "nodemailer";
 import { CURRENT_YEAR, JOIN_DEADLINE } from "$lib/utils/CONSTANTS";
