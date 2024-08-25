@@ -2,12 +2,12 @@
 	import SuperDebug, { superForm } from "sveltekit-superforms";
 	import { Check, Loader2, X } from "lucide-svelte";
 	import { getYearString } from "$lib/utils/years.js";
-	import { CURRENT_YEAR, DUES_DEADLINE } from "$lib/utils/CONSTANTS.js";
 
 	import strftime from "strftime";
 	import { slide } from "svelte/transition";
 
 	let { data } = $props();
+	let { CURRENT_YEAR, DUES_DEADLINE } = data;
 	let { form, errors, constraints, enhance, submitting, delayed, message } = $state(superForm(data.form));
 
 	let id = $state<string>();

@@ -97,6 +97,14 @@ VALUES
 	);
 
 INSERT INTO
+	"public"."user_permissions" (user_id, permissions)
+VALUES
+	(
+		'2265aaa1-51c1-4dac-aeb5-fe321b557c99',
+		ARRAY['announcements', 'events_data']::user_permission[]
+	);
+
+INSERT INTO
 	officers (name, POSITION, YEAR)
 VALUES
 	('Sneha Jaikumar', 'Co-President', '2023-24'),
@@ -143,72 +151,71 @@ VALUES
 	('Fion Lin', 'Director of Membership', '2024-25'),
 	('Ryan Pham', 'Treasurer', '2024-25');
 
-INSERT INTO
-	members (
-		membership_year,
-		first_name,
-		last_name,
-		email,
-		track
-	)
-VALUES
-	(
-		'2023-24',
-		'David',
-		'Majernik',
-		'dpmaj@unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Hunter',
-		'Qu',
-		'hunterqu@unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Daniel',
-		'Zhang',
-		'Dzahng@unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Brenton',
-		'Lian',
-		'blian@unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Alex',
-		'Feng',
-		'alfeng@ad.unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Anika',
-		'Ahmed',
-		'aahm@unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Levi',
-		'Harris',
-		'levlevi@email.unc.edu',
-		'beginner'
-	),
-	(
-		'2023-24',
-		'Kohen',
-		'Goble',
-		'koandgo@ad.unc.edu',
-		'technical'
-	);
-
+-- INSERT INTO
+-- 	members (
+-- 		membership_year,
+-- 		first_name,
+-- 		last_name,
+-- 		email,
+-- 		track
+-- 	)
+-- VALUES
+-- 	(
+-- 		'2023-24',
+-- 		'David',
+-- 		'Majernik',
+-- 		'dpmaj@unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Hunter',
+-- 		'Qu',
+-- 		'hunterqu@unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Daniel',
+-- 		'Zhang',
+-- 		'Dzahng@unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Brenton',
+-- 		'Lian',
+-- 		'blian@unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Alex',
+-- 		'Feng',
+-- 		'alfeng@ad.unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Anika',
+-- 		'Ahmed',
+-- 		'aahm@unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Levi',
+-- 		'Harris',
+-- 		'levlevi@email.unc.edu',
+-- 		'beginner'
+-- 	),
+-- 	(
+-- 		'2023-24',
+-- 		'Kohen',
+-- 		'Goble',
+-- 		'koandgo@ad.unc.edu',
+-- 		'technical'
+-- 	);
 INSERT INTO
 	events_data (id, type, is_public, tags)
 VALUES

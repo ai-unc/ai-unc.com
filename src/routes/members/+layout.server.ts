@@ -2,11 +2,12 @@ import { SUPABASE_SERVICE_ROLE_KEY } from "$env/static/private";
 import { createServerClient } from "@supabase/ssr";
 import type { LayoutServerLoad } from "./$types";
 import { PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { CURRENT_YEAR, FIRST_YEAR } from "$lib/utils/CONSTANTS";
+import { FIRST_YEAR } from "$lib/utils/CONSTANTS";
 import { error as kitError, redirect } from "@sveltejs/kit";
 import { getYearString } from "$lib/utils/years";
 
-export const load: LayoutServerLoad = async ({ fetch, params, cookies }) => {
+export const load: LayoutServerLoad = async ({ fetch, params, cookies, parent }) => {
+	const { CURRENT_YEAR } = await parent();
 	if (params.year && params.year.match("^[0-9]{4}-[0-9]{2}$") === null) {
 		if (params.year.match("^[0-9]{4}$")) {
 			params.year += "-";

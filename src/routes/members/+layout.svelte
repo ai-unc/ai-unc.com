@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { CURRENT_YEAR } from "$lib/utils/CONSTANTS";
-
 	let { data, children } = $props();
+	let { CURRENT_YEAR } = data;
 </script>
 
 <svelte:head>

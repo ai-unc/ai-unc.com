@@ -4,17 +4,18 @@ import { error as kitError, fail, redirect } from "@sveltejs/kit";
 
 import { createServerClient } from "@supabase/ssr";
 import { PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY } from "$env/static/private";
+import { SUPABASE_SERVICE_ROLE_KEY, STRIPE_SECRET_KEY, KV_REST_API_URL, KV_REST_API_READ_ONLY_TOKEN } from "$env/static/private";
 
 import Stripe from "stripe";
 import { dev } from "$app/environment";
 
-import { CURRENT_YEAR } from "$lib/utils/CONSTANTS";
 import { getYearString } from "$lib/utils/years";
+import { createClient } from "@vercel/kv";
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ url, fetch, cookies }) => {
+export const load: PageServerLoad = async ({ url, fetch, cookies, parent }) => {
+	const { CURRENT_YEAR } = await parent();
 	const id = url.searchParams.get("id");
 	if (id) {
 		const supabase = createServerClient<Database.Database>(PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -69,6 +70,13 @@ export const actions: Actions = {
 					},
 				},
 			});
+			const client = createClient({
+				url: KV_REST_API_URL,
+				token: KV_REST_API_READ_ONLY_TOKEN,
+			});
+			const CURRENT_YEAR = await client.get<number>("CURRENT_YEAR");
+
+			if (CURRENT_YEAR == null) return fail(500, { error: "Oops! There was a problem." });
 			const { data, error } = await supabase.from("members").select().eq("id", id).eq("membership_year", getYearString(CURRENT_YEAR));
 			if (error) {
 				return fail(500, { error: "Oops! There was a problem." });
