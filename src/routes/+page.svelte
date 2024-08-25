@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { JOIN_DEADLINE } from "$lib/utils/CONSTANTS";
 	import { ArrowRight, Blocks, CalendarDays } from "lucide-svelte";
 	import strftime from "strftime";
 	import { getContext } from "svelte";
 	import { optimize } from "$lib/utils/image_optimization";
+
+	let { data } = $props();
+	let { JOIN_DEADLINE } = data;
 
 	let scrollY = getContext<() => number>("scrollY");
 	let resolution = getContext<() => { window_width: number; window_height: number }>("resolution");

@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { getYearSlugs } from "$lib/utils/years";
 
-	const past_years = getYearSlugs().slice(0, 1);
+	const { data } = $props();
+	const { CURRENT_YEAR } = data;
+	const past_years = getYearSlugs(CURRENT_YEAR).slice(0, 1);
 </script>
 
 <div class="container">

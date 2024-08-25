@@ -8,13 +8,13 @@ import { schema } from "./formSchema";
 
 import { createServerClient } from "@supabase/ssr";
 import { PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { SUPABASE_SERVICE_ROLE_KEY, NODEMAILER_APP_PASSWORD } from "$env/static/private";
+import { SUPABASE_SERVICE_ROLE_KEY, NODEMAILER_APP_PASSWORD, KV_REST_API_URL, KV_REST_API_READ_ONLY_TOKEN } from "$env/static/private";
 
 import nodemailer from "nodemailer";
-import { CURRENT_YEAR, JOIN_DEADLINE } from "$lib/utils/CONSTANTS";
 import { getYearString } from "$lib/utils/years";
 
 import { QRCodeCanvas } from "styled-qr-code-node";
+import { createClient } from "@vercel/kv";
 
 export const prerender = false;
 
@@ -31,6 +31,16 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return fail(400, { form });
 		}
+
+		const client = createClient({
+			url: KV_REST_API_URL,
+			token: KV_REST_API_READ_ONLY_TOKEN,
+		});
+		const CURRENT_YEAR = await client.get<number>("CURRENT_YEAR");
+		const JOIN_DEADLINE = await client.get<string>("JOIN_DEADLINE");
+
+		if (CURRENT_YEAR == null) return setError(form, "", "Unexpected Error", { status: 500 });
+		if (JOIN_DEADLINE == null) return setError(form, "", "Unexpected Error", { status: 500 });
 
 		if (new Date().toISOString() > JOIN_DEADLINE) return setError(form, "", "The deadline has passed", { status: 401 });
 
@@ -58,11 +68,10 @@ export const actions: Actions = {
 			.insert({ email, first_name, last_name, track: is_beginner_track ? "beginner" : "technical", membership_year: getYearString(CURRENT_YEAR) })
 			.select("id");
 
-		// TODO: Error message handling
 		if (error) {
 			console.error(`(SUPABASE) Issue inserting member record: ${error.message}`);
 			if (error.code === "23505") return setError(form, "email", `${email} has already been used to signup for the ${getYearString(CURRENT_YEAR)} Academic Year`);
-			return fail(500, { form });
+			return setError(form, "", "Unexpected Error", { status: 500 });
 		}
 
 		// Send email
