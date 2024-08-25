@@ -11,7 +11,7 @@ export type Database = {
     Tables: {
       announcements: {
         Row: {
-          active_until: string | null
+          active_until: string
           content: string
           created_at: string
           created_by: string
@@ -19,19 +19,21 @@ export type Database = {
           id: string
           platforms: Database["public"]["Enums"]["announcement_platform"][]
           priority: Database["public"]["Enums"]["announcement_priority"]
+          title: string | null
         }
         Insert: {
-          active_until?: string | null
+          active_until: string
           content: string
-          created_at: string
+          created_at?: string
           created_by: string
           discord_message_id?: number | null
-          id: string
+          id?: string
           platforms: Database["public"]["Enums"]["announcement_platform"][]
           priority: Database["public"]["Enums"]["announcement_priority"]
+          title?: string | null
         }
         Update: {
-          active_until?: string | null
+          active_until?: string
           content?: string
           created_at?: string
           created_by?: string
@@ -39,6 +41,7 @@ export type Database = {
           id?: string
           platforms?: Database["public"]["Enums"]["announcement_platform"][]
           priority?: Database["public"]["Enums"]["announcement_priority"]
+          title?: string | null
         }
         Relationships: [
           {
@@ -52,21 +55,29 @@ export type Database = {
       }
       attendance: {
         Row: {
+          checked_in_by: string
           event_id: string
           member_id: string
-          officer: string
         }
         Insert: {
+          checked_in_by: string
           event_id: string
           member_id: string
-          officer: string
         }
         Update: {
+          checked_in_by?: string
           event_id?: string
           member_id?: string
-          officer?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "attendance_checked_in_by_fkey"
+            columns: ["checked_in_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       events_data: {
         Row: {
@@ -224,12 +235,46 @@ export type Database = {
         }
         Relationships: []
       }
+      user_permissions: {
+        Row: {
+          permissions: Database["public"]["Enums"]["user_permission"][]
+          user_id: string
+        }
+        Insert: {
+          permissions: Database["public"]["Enums"]["user_permission"][]
+          user_id: string
+        }
+        Update: {
+          permissions?: Database["public"]["Enums"]["user_permission"][]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      authorize: {
+        Args: {
+          requested_permission: Database["public"]["Enums"]["user_permission"]
+        }
+        Returns: boolean
+      }
+      custom_access_token_hook: {
+        Args: {
+          event: Json
+        }
+        Returns: Json
+      }
     }
     Enums: {
       announcement_platform: "website" | "discord" | "email"
@@ -238,6 +283,7 @@ export type Database = {
       event_type: "social" | "audience_event" | "workshop" | "major_event"
       member_track: "technical" | "beginner"
       post_category: "event" | "project"
+      user_permission: "announcements" | "events_data"
     }
     CompositeTypes: {
       [_ in never]: never

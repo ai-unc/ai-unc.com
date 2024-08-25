@@ -37,7 +37,7 @@ default_pool_size = 20
 max_client_conn = 100
 
 [realtime]
-enabled = true
+enabled = false
 # Bind realtime via either IPv4 or IPv6. (default: IPv6)
 # ip_version = "IPv6"
 
@@ -125,6 +125,11 @@ redirect_uri = ""
 # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
 # or any other third-party OIDC providers.
 url = ""
+
+[auth.hook.custom_access_token]
+enabled = true
+uri = "pg-functions://postgres/public/custom_access_token_hook"
+
 
 [analytics]
 enabled = false
