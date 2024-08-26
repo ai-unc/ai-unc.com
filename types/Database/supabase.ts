@@ -279,7 +279,12 @@ export type Database = {
     Enums: {
       announcement_platform: "website" | "discord" | "email"
       announcement_priority: "LOW" | "MEDIUM" | "HIGH"
-      event_tag: "cle" | "food" | "snacks"
+      event_tag:
+        | "cle"
+        | "food"
+        | "snacks"
+        | "technical_track"
+        | "beginner_track"
       event_type: "social" | "audience_event" | "workshop" | "major_event"
       member_track: "technical" | "beginner"
       post_category: "event" | "project"

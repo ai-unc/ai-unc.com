@@ -21,6 +21,7 @@ declare global {
 		export type Announcement = Database["public"]["Tables"]["announcements"]["Row"];
 
 		namespace Enums {
+			export type MemberTrack = Database["public"]["Enums"]["member_track"];
 			export type Platform = Database["public"]["Enums"]["announcement_platform"];
 			export type Priority = Database["public"]["Enums"]["announcement_priority"];
 			export type EventType = Database["public"]["Enums"]["event_type"];

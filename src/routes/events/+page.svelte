@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from "svelte/transition";
 	import TimelineEventList from "./TimelineEventList.svelte";
-	import { ArrowUp, Check, ChevronDown, Cookie, LockOpen, Utensils } from "lucide-svelte";
+	import { ArrowUp, Blocks, BrainCircuit, Check, ChevronDown, Cookie, LockOpen, Utensils } from "lucide-svelte";
 
 	let { data } = $props();
 
@@ -49,28 +49,13 @@
 		if (type === "audience_event") return events.filter((e) => e.data?.type === type || e.data?.type === "major_event").length;
 		return events.filter((e) => e.data?.type === type).length;
 	}
-	let selected_event_types: Array<EventTypeAndOther> = $state([]);
-	function toggleTypeSelection(value: EventTypeAndOther) {
-		const i = selected_event_types.indexOf(value);
-		if (i > -1) selected_event_types.splice(i, 1);
-		else selected_event_types.push(value);
-	}
-
-	let is_public_filter = $state(false);
-	function toggleIsPublicFilter() {
-		is_public_filter = !is_public_filter;
-	}
-
-	let selected_event_tags: Array<Database.Enums.EventTag> = $state([]);
-	function toggleTagSelection(value: Database.Enums.EventTag) {
-		const i = selected_event_tags.indexOf(value);
-		if (i > -1) selected_event_tags.splice(i, 1);
-		else selected_event_tags.push(value);
-	}
-
 	type RecurringEventsDisplayOptions = "only_recurring" | "no_recurring" | "compact" | "both";
-	let show_recurring_setting: RecurringEventsDisplayOptions = $state("both");
+	let show_recurring_setting: RecurringEventsDisplayOptions = $state("compact");
 	const RECURRING_EVENTS_DISPLAY_OPTIONS: Array<{ value: RecurringEventsDisplayOptions; label: string }> = [
+		{
+			value: "compact",
+			label: "Compact Recurring",
+		},
 		{
 			value: "both",
 			label: "Show Recurring",
@@ -83,12 +68,33 @@
 			value: "only_recurring",
 			label: "Show Only Recurring",
 		},
-		// TODO: Add this somehow lol
-		// {
-		// 	value: "compact",
-		// 	label: "Show Recurring Events with a Date Range",
-		// },
 	];
+
+	let selected_event_types: Array<EventTypeAndOther> = $state([]);
+	function toggleTypeSelection(value: EventTypeAndOther) {
+		const i = selected_event_types.indexOf(value);
+		if (i > -1) selected_event_types.splice(i, 1);
+		else selected_event_types.push(value);
+	}
+
+	let is_public_filter = $state(false);
+	function toggleIsPublicFilter() {
+		is_public_filter = !is_public_filter;
+	}
+
+	let selected_track: Database.Enums.MemberTrack | null = $state(null);
+	function handleTrackSelection(track: Database.Enums.MemberTrack) {
+		if (selected_track === track) {
+			selected_track = null;
+		} else selected_track = track;
+	}
+
+	let selected_event_tags: Array<Database.Enums.EventTag> = $state([]);
+	function toggleTagSelection(value: Database.Enums.EventTag) {
+		const i = selected_event_tags.indexOf(value);
+		if (i > -1) selected_event_tags.splice(i, 1);
+		else selected_event_tags.push(value);
+	}
 
 	function filterEvents(events: Array<CalendarEvent>) {
 		return events.filter((event) => {
@@ -106,6 +112,12 @@
 			}
 
 			if (is_public_filter && (event.data === undefined || event.data.is_public === false)) return false;
+
+			if (selected_track === "technical" && event.data && event.data.tags.indexOf("beginner_track") > -1) {
+				return false;
+			} else if (selected_track === "beginner" && event.data && event.data.tags.indexOf("technical_track") > -1) {
+				return false;
+			}
 
 			if (selected_event_tags.length > 0) {
 				if (event.data === undefined) return false;
@@ -183,6 +195,11 @@
 			{/if}
 		</div>
 		<div use:melt={$content} class="content">
+			<div class="recurring">
+				{#each RECURRING_EVENTS_DISPLAY_OPTIONS as option}
+					<button class:active={show_recurring_setting === option.value} onclick={() => (show_recurring_setting = option.value)}>{option.label}</button>
+				{/each}
+			</div>
 			<div class="event-types">
 				<div class="title">Event Types <span class="font-light">- Upcoming(Total)</span></div>
 				<div class="options">
@@ -215,6 +232,24 @@
 			<div class="event-tags">
 				<div class="title">Event Tags</div>
 				<div class="options">
+					<button onclick={() => handleTrackSelection("technical")}>
+						<div class="check">
+							{#if selected_track === "technical"}
+								<Check />
+							{/if}
+						</div>
+						<div class="icon"><BrainCircuit /></div>
+						Primary Track<span style="font-size:0.65em">(Exclusive)</span>
+					</button>
+					<button onclick={() => handleTrackSelection("beginner")}>
+						<div class="check">
+							{#if selected_track === "beginner"}
+								<Check />
+							{/if}
+						</div>
+						<div class="icon"><Blocks /></div>
+						Foundational Track<span style="font-size:0.65em">(Exclusive)</span>
+					</button>
 					<button onclick={() => toggleTagSelection("cle")}>
 						<div class="label">
 							<div class="check">
@@ -250,11 +285,6 @@
 					</button>
 				</div>
 			</div>
-			<div class="recurring">
-				{#each RECURRING_EVENTS_DISPLAY_OPTIONS as option}
-					<button class:active={show_recurring_setting === option.value} onclick={() => (show_recurring_setting = option.value)}>{option.label}</button>
-				{/each}
-			</div>
 		</div>
 	</div>
 	<div class="timeline">
@@ -274,21 +304,8 @@
 					class="animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg
 				>
 			{:then r}
-				{console.assert(
-					(upcoming_events = updateEventsWithData(r)),
-					// (upcoming_events = updateEventsWithData([
-					// 	...r,
-					// 	{
-					// 		id: "id",
-					// 		summary: "AI@UNC I/O",
-					// 		start: { dateTime: "2025-04-15T18:00:00-04:00", timeZone: "America/New_York" },
-					// 		location: "SN115",
-					// 		description: "End of year event",
-					// 		htmlLink: "a",
-					// 	},
-					// ])),
-				)}
-				<TimelineEventList events={filtered_upcoming_events}></TimelineEventList>
+				{console.assert((upcoming_events = updateEventsWithData(r)))}
+				<TimelineEventList events={filtered_upcoming_events} compact={show_recurring_setting === "compact"}></TimelineEventList>
 			{/await}
 
 			<h2 id="past-events">Past Events ({filtered_past_events.length})</h2>
@@ -307,7 +324,7 @@
 				>
 			{:then r}
 				{console.assert((past_events = updateEventsWithData(r)))}
-				<TimelineEventList events={filtered_past_events}></TimelineEventList>
+				<TimelineEventList events={filtered_past_events} compact={show_recurring_setting === "compact"}></TimelineEventList>
 			{/await}
 		</div>
 	</div>
@@ -334,12 +351,12 @@
 	.filters {
 		grid-column: 2;
 
-		@apply sticky top-14 z-10 sm:top-24;
+		@apply sticky top-14 z-10 sm:top-20;
 
 		@apply mb-8 xl:mb-0 xl:ml-8 2xl:ml-14;
 
 		@apply bg-gradient-to-br from-gray-900 to-gray-950 xl:bg-base/20;
-		@apply rounded-md p-4 ring-haze-offwhite/80 xl:p-8 xl:ring-[1px];
+		@apply rounded-md p-4 ring-haze-offwhite/80 xl:p-6 xl:ring-[1px];
 
 		height: fit-content;
 
@@ -356,7 +373,7 @@
 			}
 		}
 		.content {
-			@apply mt-2 flex flex-col gap-y-8;
+			@apply mt-2 flex flex-col gap-y-7 2xl:gap-y-8;
 		}
 
 		.title {
@@ -385,6 +402,28 @@
 
 					filter: drop-shadow(1px 1px 1px rgb(0 0 0 / 0.25)) drop-shadow(-1px -1px 1px rgb(0 0 0 / 0.25)) drop-shadow(-1px 1px 1px rgb(0 0 0 / 0.25))
 						drop-shadow(1px -1px 1px rgb(0 0 0 / 0.25));
+				}
+			}
+		}
+
+		.recurring {
+			@apply flex flex-col xl:flex-row;
+
+			button {
+				@apply bg-base/60 py-2 text-center sm:py-4 xl:p-4;
+				@apply text-xs 2xl:text-sm;
+
+				&.active {
+					@apply bg-base/20;
+				}
+
+				&:first-child {
+					@apply rounded-t-lg;
+					@apply xl:rounded-t-none;
+					@apply xl:rounded-l-lg;
+				}
+				&:last-child {
+					@apply rounded-b-lg xl:rounded-b-none xl:rounded-r-lg;
 				}
 			}
 		}
@@ -426,27 +465,6 @@
 
 			.check {
 				@apply mr-2;
-			}
-		}
-
-		.recurring {
-			@apply flex flex-col xl:flex-row;
-
-			button {
-				@apply bg-base/60 py-2 text-center text-sm xl:p-4;
-
-				&.active {
-					@apply bg-base/20;
-				}
-
-				&:first-child {
-					@apply rounded-t-lg;
-					@apply xl:rounded-t-none;
-					@apply xl:rounded-l-lg;
-				}
-				&:last-child {
-					@apply rounded-b-lg xl:rounded-b-none xl:rounded-r-lg;
-				}
 			}
 		}
 	}
