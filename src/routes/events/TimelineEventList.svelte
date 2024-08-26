@@ -7,7 +7,7 @@
 	};
 	let { events, compact }: Props = $props();
 
-	const MIN_EVENTS_SHOWING = 15;
+	const MIN_EVENTS_SHOWING = 10;
 	let max_events_showing = $state(MIN_EVENTS_SHOWING);
 
 	$effect(() => {
