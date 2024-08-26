@@ -3,8 +3,9 @@
 
 	type Props = {
 		events: Array<CalendarEvent>;
+		compact: boolean;
 	};
-	let { events }: Props = $props();
+	let { events, compact }: Props = $props();
 
 	const MIN_EVENTS_SHOWING = 15;
 	let max_events_showing = $state(MIN_EVENTS_SHOWING);
@@ -18,7 +19,7 @@
 {#if events.length > 0}
 	<div class="event-list">
 		{#each events.slice(0, max_events_showing) as event}
-			<TimelineEventComponent {event} />
+			<TimelineEventComponent {event} {compact} />
 		{/each}
 		<div class="mx-auto">
 			{#if max_events_showing > MIN_EVENTS_SHOWING}

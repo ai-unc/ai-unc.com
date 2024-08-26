@@ -1,10 +1,14 @@
 <script lang="ts">
-	import { Cookie, LockOpen, RefreshCw, Utensils } from "lucide-svelte";
+	import { Blocks, BrainCircuit, Cookie, LockOpen, RefreshCw, Utensils } from "lucide-svelte";
 
-	let { event }: { event: CalendarEvent } = $props();
+	let { event, compact: _compact }: { event: CalendarEvent; compact: boolean } = $props();
+
+	const today = new Date();
+	const next_week = new Date(today.setDate(today.getDate() + 7));
+	let compact = $derived(_compact && event.id.includes("_") && (event.start.dateTime > next_week.toISOString() || event.start.dateTime < today.toISOString()));
 </script>
 
-<div class="event">
+<div class="event" class:compact>
 	<!-- <div>{event.id}</div> -->
 	<!-- <div>{event.id.split("_")}</div> -->
 	<!-- <pre>{JSON.stringify(event.data)}</pre> -->
@@ -33,6 +37,11 @@
 				{#if event.data.is_public}
 					<div class="icon" title="Open to the Public"><LockOpen /></div>
 				{/if}
+				{#if event.data.tags.includes("beginner_track")}
+					<div class="icon" title="Exclusive to Foundational Track Members"><Blocks /></div>
+				{:else if event.data.tags.includes("technical_track")}
+					<div class="icon" title="Exclusive to Primary Track Members"><BrainCircuit /></div>
+				{/if}
 			{/if}
 			{#if event.id.includes("_")}
 				<div class="icon" title="Recurring Event"><RefreshCw class="text-dasyphyllous-green" /></div>
@@ -52,13 +61,19 @@
 			minute: "2-digit",
 		})}
 	</div>
-	<div class="location">{event.location}</div>
-	<p>{@html event.description?.replaceAll("<a", '<a target="_blank" ').replaceAll("\n", "<br>")}</p>
+	{#if compact === false}
+		<div class="location">{event.location}</div>
+		<p>{@html event.description?.replaceAll("<a", '<a target="_blank" ').replaceAll("\n", "<br>")}</p>
+	{/if}
 </div>
 
 <style lang="postcss">
 	.event {
 		@apply rounded-2xl p-2 outline outline-2 outline-gray-400 md:p-4;
+
+		&.compact {
+			@apply opacity-75;
+		}
 	}
 	.heading {
 		@apply flex gap-x-4;
