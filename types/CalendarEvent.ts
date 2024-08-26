@@ -5,6 +5,10 @@ type CalendarEvent = {
 		dateTime: string;
 		timeZone: string;
 	};
+	end: {
+		dateTime: string;
+		timeZone: string;
+	};
 	location: string;
 	description: string;
 	htmlLink: string;

@@ -59,6 +59,10 @@
 			day: "numeric",
 			hour: "numeric",
 			minute: "2-digit",
+		})} - {new Date(event.end.dateTime).toLocaleTimeString("en-US", {
+			timeZone: event.end.timeZone,
+			hour: "numeric",
+			minute: "2-digit",
 		})}
 	</div>
 	{#if compact === false}
